@@ -36,12 +36,15 @@
   (let*
     (
       (lyr_orig (car (gimp-image-get-active-layer img)))
-                (name_lyr_orig (car (gimp-item-get-name lyr_orig)))
+      (name_lyr_orig (car (gimp-item-get-name lyr_orig)))
       (bkg_orig (car (gimp-context-get-background)))
       (wdt_orig (car (gimp-image-width img)))
       (hgh_orig (car (gimp-image-height img)))
       (off_x 25)
       (off_y 25)
+    )
+    (define (get-new-layer-name postfix)
+      (string-append name_lyr_orig " extract-from-green-background " postfix)
     )
     (gimp-context-set-background '(0 255 0))
     (gimp-image-resize
@@ -60,7 +63,8 @@
     (gimp-image-set-component-visible img 2 FALSE)
     (let*
       (
-        (lyr_g1 (car (gimp-layer-new-from-visible img img "g #1")))
+        (name_lyr_new (get-new-layer-name "g #1"))
+        (lyr_g1 (car (gimp-layer-new-from-visible img img name_lyr_new)))
       )
       (gimp-image-insert-layer img lyr_g1 0 -1)
       ; enable red channel
@@ -80,9 +84,12 @@
         (gimp-image-set-component-visible img 1 FALSE)
         ; disable blue channel
         (gimp-image-set-component-visible img 2 FALSE)
+        (set!
+          name_lyr_new (get-new-layer-name "r")
+        )
         (let*
           (
-            (lyr_r (car (gimp-layer-new-from-visible img img "r")))
+            (lyr_r (car (gimp-layer-new-from-visible img img name_lyr_new)))
           )
           (gimp-image-insert-layer img lyr_r 0 -1)
           ; enable green channel
@@ -97,9 +104,12 @@
           (gimp-image-set-component-visible img 0 FALSE)
           ; disable green channel
           (gimp-image-set-component-visible img 1 FALSE)
+          (set!
+            name_lyr_new (get-new-layer-name "b")
+          )
           (let*
             (
-              (lyr_b (car (gimp-layer-new-from-visible img img "b")))
+              (lyr_b (car (gimp-layer-new-from-visible img img name_lyr_new)))
             )
             (gimp-image-insert-layer img lyr_b 0 -1)
             ; enable red channel
@@ -195,7 +205,7 @@
                           img
                           (car (gimp-image-width img))
                           (car (gimp-image-height img))
-                          0 "back" 100 28
+                          0 (get-new-layer-name "back") 100 28
                         )
                       )
                     )
