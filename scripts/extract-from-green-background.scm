@@ -1,4 +1,5 @@
 ; extract-from-green-background.scm
+;
 ; Makes the green border of the current layer transparent.
 ;
 ; This is used for images (of, for example, artworks) that have been
@@ -238,7 +239,8 @@
   (gimp-displays-flush)
 )
 
-(script-fu-register "script-fu-extract-from-green-background"
+(script-fu-register
+  "script-fu-extract-from-green-background"
   _"Extract from Green Background"
   _"Makes the green border of the current layer transparent."
   "Warwick Allen"
@@ -249,5 +251,7 @@
   SF-DRAWABLE "Drawable" 0
 )
 
-(script-fu-menu-register "script-fu-extract-from-green-background"
-                         "<Image>/Colors/Auto")
+(script-fu-menu-register
+  "script-fu-extract-from-green-background"
+  "<Image>/Colors/Auto"
+)

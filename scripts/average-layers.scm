@@ -1,4 +1,5 @@
 ; average-layers.scm
+;
 ; Averages all the layers.
 ;
 ; MIT License
@@ -61,7 +62,8 @@
   (gimp-displays-flush)
 )
 
-(script-fu-register "script-fu-average-layers"
+(script-fu-register
+  "script-fu-average-layers"
   _"Average Layers"
   _"Averages all the layers."
   "Warwick Allen"
@@ -71,6 +73,7 @@
   SF-IMAGE    "Image"    0
 )
 
-(script-fu-menu-register "script-fu-average-layers"
+(script-fu-menu-register
+  "script-fu-average-layers"
   "<Image>/Layer"
 )
