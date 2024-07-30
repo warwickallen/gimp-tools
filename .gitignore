@@ -8,3 +8,6 @@
 
 # VIm
 *.sw[pqrs]
+
+# VS Code
+*.code-workspace
