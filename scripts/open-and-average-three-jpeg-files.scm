@@ -89,6 +89,9 @@
           )))
         )
 
+        ; Make sure "undo" continues to work
+        (gimp-image-undo-group-start img)
+
         ; Add layers to image
         (gimp-image-add-layer img drawable-b 1)
         (gimp-image-add-layer img drawable-c 2)
@@ -134,10 +137,13 @@
             (string-append image-directory xcf-name)
             xcf-name
           )
+
+        (gimp-image-undo-group-end img)
         )
       )
     )
   )
+  (gimp-displays-flush)
 )
 
 (script-fu-register
