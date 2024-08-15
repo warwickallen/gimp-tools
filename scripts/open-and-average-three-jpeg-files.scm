@@ -14,7 +14,7 @@
 ;   - Removes the alpha channel from the resulting layer.
 ;   - Save the Gimp file using a composite file name.
 ;
-; The directory where the photo files are stored and the three most significant
+; The directory where the photo files are stored and the five most significant
 ; digits of the photo file number are hard-coded in this script.
 ;
 ; MIT License
@@ -42,25 +42,27 @@
 (define (script-fu-open-and-average-three-jpeg-files n)
   (let*
     (
-      (image-directory (string-append
-        (getenv "userprofile") ; Warning! This is Windows-specific
-        "\\Pictures\\DCIM\\104_PANA\\"
-      ))
-      (base-file-number 1040000)
+      (base-file-number 1000000)
 
       ; Check if input is valid
-      (valid-input (and (integer? n) (< n 10000) (> n 0)))
+      (valid-input (and (integer? n) (< n 100000) (> n 0)))
     )
     (if (not valid-input)
       (begin
         (gimp-message
-          "Invalid input! Please enter a positive integer less than 10,000."
+          "Invalid input! Please enter a positive integer less than 100,000."
         )
         (quit)
       )
 
       (let*
         (
+          (image-directory (string-append
+            (getenv "userprofile") ; Warning! This is Windows-specific
+            "\\Pictures\\DCIM\\10"
+            (substring (number->string n) 0 1)
+            "_PANA\\"
+          ))
           ; Calculate file numbers
           (a (+ base-file-number 0 n))
           (b (+ base-file-number 1 n))
@@ -155,8 +157,8 @@
   "July 2014"                                           ; Creation date
   "None"                                                ; Image types
   SF-ADJUSTMENT                                         ; Input parameter
-  "Enter the final four digits of the photo file number (you may leave off leading zeroes)"
-  '(0 0 999 1 1 0 SF-SPINNER)
+  "Enter the final five digits of the photo file number (you may leave off leading zeroes)"
+  '(0 0 99999 1 1 0 SF-SPINNER)
 )
 
 (script-fu-menu-register
