@@ -237,12 +237,15 @@
 
   (gimp-image-undo-group-end img)
   (gimp-displays-flush)
+
+  ; Execute script-fu-standardise-border
+  (script-fu-standardise-border img)
 )
 
 (script-fu-register
   "script-fu-extract-from-green-background"
-  _"Extract from Green Background"
-  _"Makes the green border of the current layer transparent."
+  "Extract from Green Background"
+  "Makes the green border of the current layer transparent."
   "Warwick Allen"
   "Copyright (c) 2024 Warwick Allen, MIT licence"
   "July 2014"
