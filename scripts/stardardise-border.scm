@@ -42,6 +42,7 @@
       (off_y (/ (- hgh_new hgh_orig) 2))
       (blr_x (* 0.02 wdt_orig))
       (blr_y (* 0.02 hgh_orig))
+      (blr (/ (+ blr_x blr_y (max blr_x blr_y)) 3))
     )
     (define (get-new-layer-name postfix)
       (string-append name_lyr_orig " standardise-border " postfix)
@@ -61,7 +62,7 @@
       )
       (gimp-drawable-set-name lyr_blr (get-new-layer-name "blurred"))
       (gimp-image-insert-layer img lyr_blr 0 -1)
-      (plug-in-gauss RUN-NONINTERACTIVE img lyr_blr blr_x blr_y 1) ; for the last param: 0 = IIR, 1 = RLE
+      (plug-in-gauss RUN-NONINTERACTIVE img lyr_blr blr blr 1) ; for the last param: 0 = IIR, 1 = RLE
       (gimp-context-set-sample-threshold 0.05)
       (gimp-image-select-contiguous-color img CHANNEL-OP-REPLACE lyr_blr 0 0)
       (gimp-context-set-sample-threshold smpl_thrshld_orig)
