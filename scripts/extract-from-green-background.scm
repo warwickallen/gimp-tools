@@ -36,11 +36,11 @@
   (gimp-image-flatten img)
   (let*
     (
-      (lyr_orig (car (gimp-image-get-active-layer img)))
+      (lyr_orig (vector-ref (car (gimp-image-get-selected-drawables img)) 0))
       (name_lyr_orig (car (gimp-item-get-name lyr_orig)))
       (bkg_orig (car (gimp-context-get-background)))
-      (wdt_orig (car (gimp-image-width img)))
-      (hgh_orig (car (gimp-image-height img)))
+      (wdt_orig (car (gimp-image-get-width img)))
+      (hgh_orig (car (gimp-image-get-height img)))
       (off_x 25)
       (off_y 25)
     )
@@ -122,9 +122,9 @@
 
             ; Combine so to emphasise where there is a lot of green compared
             ; with the other colours
-            (gimp-image-raise-layer img lyr_g2)
-            (gimp-image-raise-layer img lyr_g2)
-            (gimp-image-raise-layer img lyr_g1)
+            (gimp-image-raise-item img lyr_g2)
+            (gimp-image-raise-item img lyr_g2)
+            (gimp-image-raise-item img lyr_g1)
             (gimp-layer-set-mode lyr_g2 41) ; divide
             (gimp-layer-set-mode lyr_g1 41) ; divide
             (gimp-item-set-visible lyr_g2 TRUE)
@@ -136,8 +136,8 @@
                 (lyr_g2b (car (gimp-image-merge-down img lyr_g2 0)))
                 (lyr_g1r (car (gimp-image-merge-down img lyr_g1 0)))
               )
-              (plug-in-c-astretch 1 img lyr_g2b)
-              (plug-in-c-astretch 1 img lyr_g1r)
+              (gimp-drawable-levels-stretch lyr_g2b)
+              (gimp-drawable-levels-stretch lyr_g1r)
               (gimp-layer-set-mode lyr_g2b 30) ; multiply
               (let*
                 (
@@ -147,7 +147,7 @@
                   (top off_y)
                   (bottom (+ hgh_orig (- off_y 1)))
                 )
-                (plug-in-c-astretch 1 img lyr_g2bg1r)
+                (gimp-drawable-levels-stretch lyr_g2bg1r)
                 (gimp-selection-none img)
                 (for-each
                   (lambda (coords_)
@@ -188,7 +188,7 @@
                 )
                 (gimp-selection-invert img)
                 (set!
-                  lyr_orig (car (gimp-image-get-active-layer img))
+                  lyr_orig (vector-ref (car (gimp-image-get-selected-drawables img)) 0)
                 )
                 (let *
                   (
@@ -204,14 +204,14 @@
                       (car
                         (gimp-layer-new
                           img
-                          (car (gimp-image-width img))
-                          (car (gimp-image-height img))
+                          (car (gimp-image-get-width img))
+                          (car (gimp-image-get-height img))
                           0 (get-new-layer-name "back") 100 28
                         )
                       )
                     )
                     (pos_lyr_orig
-                      (car (gimp-image-get-layer-position img lyr_orig))
+                      (car (gimp-image-get-item-position img lyr_orig))
                     )
                   )
                   (gimp-image-insert-layer img lyr_back -1 (+ 1 pos_lyr_orig))
@@ -219,7 +219,7 @@
               )
               (gimp-image-flatten img)
               (gimp-item-set-name
-                (car (gimp-image-get-active-layer img))
+                (vector-ref (car (gimp-image-get-selected-drawables img)) 0)
                 name_lyr_orig
               )
             )
@@ -228,7 +228,7 @@
       )
     )
     (set!
-      lyr_orig (car (gimp-image-get-active-layer img))
+      lyr_orig (vector-ref (car (gimp-image-get-selected-drawables img)) 0)
     )
     (gimp-image-resize img wdt_orig hgh_orig (- off_x) (- off_y))
     (gimp-layer-resize-to-image-size lyr_orig)

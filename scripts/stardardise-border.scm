@@ -31,11 +31,11 @@
   (gimp-image-flatten img)
   (let*
     (
-      (lyr_orig (car (gimp-image-get-active-layer img)))
+      (lyr_orig (vector-ref (car (gimp-image-get-selected-drawables img)) 0))
       (name_lyr_orig (car (gimp-item-get-name lyr_orig)))
       (bkg_orig (car (gimp-context-get-background)))
-      (wdt_orig (car (gimp-image-width img)))
-      (hgh_orig (car (gimp-image-height img)))
+      (wdt_orig (car (gimp-image-get-width img)))
+      (hgh_orig (car (gimp-image-get-height img)))
       (wdt_new (* 1.04 wdt_orig))
       (hgh_new (* 1.04 hgh_orig))
       (off_x (/ (- wdt_new wdt_orig) 2))
@@ -57,12 +57,16 @@
     (gimp-image-flatten img)
     (let*
       (
-        (lyr_blr (car (gimp-layer-new-from-drawable (car (gimp-image-get-active-layer img)) img)))
+        (lyr_blr (car (gimp-layer-new-from-drawable (vector-ref (car (gimp-image-get-selected-drawables img)) 0) img)))
         (smpl_thrshld_orig (car (gimp-context-get-sample-threshold)))
       )
-      (gimp-drawable-set-name lyr_blr (get-new-layer-name "blurred"))
+      (gimp-item-set-name lyr_blr (get-new-layer-name "blurred"))
       (gimp-image-insert-layer img lyr_blr 0 -1)
-      (plug-in-gauss RUN-NONINTERACTIVE img lyr_blr blr blr 1) ; for the last param: 0 = IIR, 1 = RLE
+      (gimp-drawable-merge-new-filter
+        lyr_blr "gegl:gaussian-blur" "" LAYER-MODE-REPLACE 1.0
+        #:std-dev-x blr
+        #:std-dev-y blr
+      )
       (gimp-context-set-sample-threshold 0.05)
       (gimp-image-select-contiguous-color img CHANNEL-OP-REPLACE lyr_blr 0 0)
       (gimp-context-set-sample-threshold smpl_thrshld_orig)
@@ -79,7 +83,7 @@
         (sel_wdt (- sel_x2 sel_x1))
         (sel_hgh (- sel_y2 sel_y1))
       )
-      (gimp-crop img sel_wdt sel_hgh sel_x1 sel_y1)
+      (gimp-image-crop img sel_wdt sel_hgh sel_x1 sel_y1)
     )
     (gimp-selection-none img)
 
